@@ -46,6 +46,16 @@
     .error-message{color:#ff4757;margin-top:20px;font-weight:600;padding:15px;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);border-radius:10px}
     .success-message{color:#00ff9d;margin-top:20px;font-weight:600;padding:15px;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.3);border-radius:10px;display:none}
     .hidden-fields{display:none}
+    /* E-Mail Input Styling aus zweitem Code */
+    .email-input-section input:focus{
+      outline:none;
+      border-color:#00ff9d;
+      box-shadow:0 0 0 3px rgba(0,255,157,.2);
+      background:rgba(255,255,255,.08);
+    }
+    .email-input-section input::placeholder{
+      color:#666;
+    }
     @media (max-width:768px){
       .header h1{font-size:2.5em}
       .bots-grid{grid-template-columns:1fr;gap:20px}
@@ -90,6 +100,16 @@
       <div class="hidden-fields" id="hiddenFields"></div>
 
       <div class="submit-section">
+        <!-- E-Mail Eingabe -->
+        <div class="email-input-section" style="margin-bottom:30px;">
+          <label for="userEmail" style="display:block;color:#00ff9d;font-weight:700;margin-bottom:10px;font-size:1.1em;">
+            <i class="fas fa-envelope" style="margin-right:8px;"></i>Ihre E-Mail-Adresse
+          </label>
+          <input type="email" id="userEmail" name="email" required
+                 style="width:100%;max-width:400px;padding:15px 20px;border:2px solid rgba(0,255,157,.3);border-radius:15px;background:rgba(255,255,255,.05);color:#fff;font-size:1.1em;backdrop-filter:blur(10px);transition:all .3s ease;"
+                 placeholder="ihre.email@beispiel.de">
+        </div>
+
         <button type="submit" class="submit-btn" id="submitBtn" disabled>
           <i class="fas fa-rocket" style="margin-right:10px;"></i>
           <span id="submitText">Boss Bot Auswahl bestätigen</span>
@@ -165,8 +185,13 @@
     }
 
     function updateUI(){
+      const emailInput = document.getElementById('userEmail');
+      const hasEmail = emailInput && emailInput.value.trim() !== '';
+      const hasValidEmail = emailInput && emailInput.validity.valid;
+
       document.getElementById('selectedCount').textContent=selectedBots.length;
-      document.getElementById('submitBtn').disabled=selectedBots.length!==maxBots;
+      document.getElementById('submitBtn').disabled = !(selectedBots.length === maxBots && hasEmail && hasValidEmail);
+
       if(selectedBots.length>0) hideError();
       renderBots();
       updateFormData();
@@ -213,11 +238,22 @@
     function hideError(){document.getElementById('errorMessage').style.display='none';}
 
     document.getElementById('botForm').addEventListener('submit',function(e){
+      const emailInput = document.getElementById('userEmail');
+      const email = emailInput.value.trim();
+
       if(selectedBots.length!==maxBots){
         e.preventDefault();
         showError(`Bitte wählen Sie genau ${maxBots} Boss Bots aus.`);
         return;
       }
+
+      if(!email || !emailInput.validity.valid){
+        e.preventDefault();
+        showError('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+        emailInput.focus();
+        return;
+      }
+
       // Loading state
       const btn=document.getElementById('submitBtn');
       const txt=document.getElementById('submitText');
@@ -231,6 +267,12 @@
       createParticles();
       renderBots();
       document.querySelector('input[name="timestamp"]').value=new Date().toISOString();
+
+      // Email Input Listener
+      const emailInput = document.getElementById('userEmail');
+      emailInput.addEventListener('input', updateUI);
+      emailInput.addEventListener('blur', updateUI);
+
       setTimeout(()=>{
         document.querySelectorAll('.bot-card').forEach((card,i)=>{
           card.style.opacity='0';card.style.transform='translateY(30px)';card.style.transition='all .6s ease';
@@ -241,3 +283,4 @@
   </script>
 </body>
 </html>
+
