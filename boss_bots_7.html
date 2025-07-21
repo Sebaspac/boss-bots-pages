@@ -329,6 +329,21 @@
             border-radius: 10px;
         }
 
+        .success-message {
+            color: #00ff9d;
+            margin-top: 20px;
+            font-weight: 600;
+            padding: 15px;
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Hidden formspree fields */
+        .hidden-fields {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header h1 {
@@ -358,8 +373,17 @@
             <p>Jeder Boss führt sein eigenes Spezialisten-Team und arbeitet rund um die Uhr für Sie. Revolutionäre KI-Technologie trifft auf unternehmerische Expertise.</p>
         </div>
 
-        <form class="form-section" id="botForm" action="/danke" method="GET">
-            <input type="hidden" name="package" value="7">
+        <form class="form-section" id="botForm" action="https://formspree.io/f/mkgzodyr" method="POST">
+            <!-- Formspree Configuration -->
+            <input type="hidden" name="_to" value="sebastian.p@newedgebrand.com,wenjamin.z@newedgebrand.com,agenthub@newedgebrand.com">
+            <input type="hidden" name="_subject" value="Neue Boss Bot Auswahl - 7er Paket">
+            <input type="hidden" name="_replyto" value="">
+            <input type="hidden" name="_next" value="">
+            <input type="hidden" name="_language" value="de">
+            
+            <!-- Package Information -->
+            <input type="hidden" name="package_type" value="7 Boss Bot Professional-Paket">
+            <input type="hidden" name="timestamp" value="">
             
             <div class="selection-info">
                 <div class="selection-counter">
@@ -372,12 +396,20 @@
                 <!-- Boss Bots werden hier eingefügt -->
             </div>
 
+            <!-- Hidden fields for selected bots -->
+            <div class="hidden-fields" id="hiddenFields">
+                <!-- Dynamic hidden inputs for selected bots will be added here -->
+            </div>
+
             <div class="submit-section">
                 <button type="submit" class="submit-btn" id="submitBtn" disabled>
                     <i class="fas fa-rocket" style="margin-right: 10px;"></i>
-                    Boss Bot Auswahl bestätigen
+                    <span id="submitText">Boss Bot Auswahl bestätigen</span>
                 </button>
                 <div class="error-message" id="errorMessage" style="display: none;"></div>
+                <div class="success-message" id="successMessage" style="display: none;">
+                    ✅ Ihre Boss Bot Auswahl wurde erfolgreich versendet!
+                </div>
             </div>
         </form>
     </div>
@@ -559,41 +591,127 @@
         }
 
         function updateFormData() {
-            // Remove existing hidden inputs for selected bots
-            const existingInputs = document.querySelectorAll('input[name="selectedBots"]');
-            existingInputs.forEach(input => input.remove());
+            const hiddenFields = document.getElementById('hiddenFields');
+            hiddenFields.innerHTML = '';
 
-            // Add new hidden inputs
-            selectedBots.forEach(botId => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'selectedBots';
-                input.value = botId;
-                document.getElementById('botForm').appendChild(input);
+            // Add selected bot data
+            selectedBots.forEach((botId, index) => {
+                const bot = bossBots.find(b => b.id === botId);
+                
+                // Bot ID
+                const botIdInput = document.createElement('input');
+                botIdInput.type = 'hidden';
+                botIdInput.name = `selected_bot_${index + 1}_id`;
+                botIdInput.value = bot.id;
+                hiddenFields.appendChild(botIdInput);
+                
+                // Bot Name
+                const botNameInput = document.createElement('input');
+                botNameInput.type = 'hidden';
+                botNameInput.name = `selected_bot_${index + 1}_name`;
+                botNameInput.value = bot.name;
+                hiddenFields.appendChild(botNameInput);
+                
+                // Bot Category
+                const botCategoryInput = document.createElement('input');
+                botCategoryInput.type = 'hidden';
+                botCategoryInput.name = `selected_bot_${index + 1}_category`;
+                botCategoryInput.value = bot.category;
+                hiddenFields.appendChild(botCategoryInput);
+                
+                // Bot Specialists
+                const botSpecialistsInput = document.createElement('input');
+                botSpecialistsInput.type = 'hidden';
+                botSpecialistsInput.name = `selected_bot_${index + 1}_specialists`;
+                botSpecialistsInput.value = bot.specialists;
+                hiddenFields.appendChild(botSpecialistsInput);
             });
+
+            // Add summary data
+            const summaryInput = document.createElement('input');
+            summaryInput.type = 'hidden';
+            summaryInput.name = 'selection_summary';
+            summaryInput.value = selectedBots.map(botId => {
+                const bot = bossBots.find(b => b.id === botId);
+                return `${bot.name} (${bot.category}) - ${bot.specialists} Spezialisten`;
+            }).join(' | ');
+            hiddenFields.appendChild(summaryInput);
+
+            // Add total specialists count
+            const totalSpecialistsInput = document.createElement('input');
+            totalSpecialistsInput.type = 'hidden';
+            totalSpecialistsInput.name = 'total_specialists';
+            totalSpecialistsInput.value = selectedBots.reduce((total, botId) => {
+                const bot = bossBots.find(b => b.id === botId);
+                return total + bot.specialists;
+            }, 0);
+            hiddenFields.appendChild(totalSpecialistsInput);
+
+            // Update timestamp
+            document.querySelector('input[name="timestamp"]').value = new Date().toISOString();
         }
 
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
+            errorDiv.innerHTML = message;
             errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
         }
 
         function hideError() {
             document.getElementById('errorMessage').style.display = 'none';
         }
 
-        // Form validation before submit
+        function showSuccess() {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Form submission handling with better error handling and user feedback
         document.getElementById('botForm').addEventListener('submit', function(e) {
             if (selectedBots.length !== maxBots) {
                 e.preventDefault();
                 showError(`Bitte wählen Sie genau ${maxBots} Boss Bots aus.`);
+                return;
             }
+
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            
+            submitBtn.disabled = true;
+            submitText.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>Wird versendet...';
+
+            // Update form data one final time before submission
+            updateFormData();
+
+            // Let the form submit naturally to Formspree
+            // On successful submission, user will be redirected or see success message based on Formspree settings
         });
 
-        // Initialize
-        createParticles();
-        renderBots();
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            renderBots();
+            
+            // Set initial timestamp
+            document.querySelector('input[name="timestamp"]').value = new Date().toISOString();
+            
+            // Add some visual polish - stagger the card appearance
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.bot-card');
+                cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }, 100);
+        });
     </script>
 </body>
 </html>
