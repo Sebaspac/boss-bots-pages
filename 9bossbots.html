@@ -46,6 +46,7 @@
     .error-message{color:#ff4757;margin-top:20px;font-weight:600;padding:15px;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);border-radius:10px}
     .success-message{color:#00ff9d;margin-top:20px;font-weight:600;padding:15px;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.3);border-radius:10px;display:none}
     .hidden-fields{display:none}
+    /* E-Mail Input Styling aus zweitem Code */
     .email-input-section input:focus{
       outline:none;
       border-color:#00ff9d;
@@ -70,27 +71,23 @@
     <div class="header">
       <div class="logo">NEW EDGE</div>
       <h1>Wählen Sie Ihre Boss Bots</h1>
-      <div class="package-badge">9 Boss Bot Premium-Paket</div>
+      <div class="package-badge">9 Boss Bot Paket</div>
       <p>Jeder Boss führt sein eigenes Spezialisten-Team und arbeitet rund um die Uhr für Sie. Revolutionäre KI-Technologie trifft auf unternehmerische Expertise.</p>
     </div>
 
-    <form class="form-section" id="botForm" action="https://formspree.io/f/mkgzodyr" method="POST">
-      <!-- Formspree Konfiguration -->
-      <input type="hidden" name="_to" value="sebastian.p@newedgebrand.com,wenjamin.z@newedgebrand.com,agenthub@newedgebrand.com">
-      <input type="hidden" name="_subject" value="Neue Boss Bot Auswahl - 9er Paket">
-      <input type="hidden" name="_replyto" value="">
-      <input type="hidden" name="_next" value="https://letspay4bots.newedgebrand.com/9paidbots">
-      <input type="hidden" name="_language" value="de">
-
-      <!-- Paket Infos -->
-      <input type="hidden" name="package_type" value="9 Boss Bot Premium-Paket">
-      <input type="hidden" name="timestamp" value="">
+   <form class="form-section" id="botForm" action="https://formsubmit.co/juan.s.pachon@gmail.com" method="POST">
+  <input type="hidden" name="_next" value="https://letspay4bots.newedgebrand.com/9paidbots.html">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_subject" value="Neue Boss Bot Auswahl - 9er Paket">
+  <input type="hidden" name="package_type" value="9 Boss Bot Premium-Paket">
+  <input type="hidden" name="timestamp" value="">
 
       <div class="selection-info">
         <div class="selection-counter">
           <span id="selectedCount">0</span> von 9 Boss Bots ausgewählt
         </div>
-        <p style="color:#999;margin-top:10px;">Wählen Sie genau 9 Boss Bots aus den 12 verfügbaren für Ihr Premium-Paket aus</p>
+        <p style="color:#999;margin-top:10px;">Wählen Sie genau 9 Boss Bots für Ihr Premium-Paket aus</p>
       </div>
 
       <div class="bots-grid" id="botsGrid"></div>
@@ -99,14 +96,16 @@
       <div class="hidden-fields" id="hiddenFields"></div>
 
       <div class="submit-section">
+        <!-- E-Mail Eingabe -->
         <div class="email-input-section" style="margin-bottom:30px;">
           <label for="userEmail" style="display:block;color:#00ff9d;font-weight:700;margin-bottom:10px;font-size:1.1em;">
             <i class="fas fa-envelope" style="margin-right:8px;"></i>Ihre E-Mail-Adresse
           </label>
-          <input type="email" id="userEmail" name="email" required 
+          <input type="email" id="userEmail" name="email" required
                  style="width:100%;max-width:400px;padding:15px 20px;border:2px solid rgba(0,255,157,.3);border-radius:15px;background:rgba(255,255,255,.05);color:#fff;font-size:1.1em;backdrop-filter:blur(10px);transition:all .3s ease;"
                  placeholder="ihre.email@beispiel.de">
         </div>
+
         <button type="submit" class="submit-btn" id="submitBtn" disabled>
           <i class="fas fa-rocket" style="margin-right:10px;"></i>
           <span id="submitText">Boss Bot Auswahl bestätigen</span>
@@ -117,175 +116,178 @@
     </form>
   </div>
 
-  <script>
-    const bossBots = [
-      {id:'content',name:'Content Boss',category:'Kreativ',description:'Führt das Content-Team: Texte, Artikel, Social Media Posts, Storytelling und kreative Kampagnen',icon:'📝',specialists:3},
-      {id:'business',name:'Business Boss',category:'Analyse',description:'Führt das Analyse-Team: Reports, Strategien, KPIs, Business Intelligence und Marktanalysen',icon:'📊',specialists:2},
-      {id:'marketing',name:'Marketing Boss',category:'Marketing',description:'Führt das Marketing-Team: Kampagnen, SEO, Conversion-Optimierung und Performance Marketing',icon:'📈',specialists:4},
-      {id:'tech',name:'Tech Boss',category:'Technik',description:'Führt das Development-Team: Code, APIs, Solutions, Automatisierung und Tech-Innovation',icon:'💻',specialists:3},
-      {id:'strategy',name:'Strategy Boss',category:'Strategie',description:'Führt das Strategy-Team: Innovation, Growth Hacking, Strategic Planning und Zukunftsplanung',icon:'🎯',specialists:2},
-      {id:'hr',name:'HR Boss',category:'Personal',description:'Führt das People-Team: Recruiting, Leadership Development, Company Culture und Talent Management',icon:'👥',specialists:2},
-      {id:'communication',name:'Communication Boss',category:'Kommunikation',description:'Führt das Communication-Team: E-Mail Marketing, Korrespondenz, PR und externe Kommunikation',icon:'✉️',specialists:2},
-      {id:'branding',name:'Branding Boss',category:'Design',description:'Führt das Design-Team: Logo Design, Corporate Identity, Visual Branding und Creative Direction',icon:'🎨',specialists:3},
-      {id:'sales',name:'Sales Boss',category:'Vertrieb',description:'Führt das Sales-Team: Lead Generation, Sales Funnels, CRM Management und Revenue Optimization',icon:'💼',specialists:3},
-      {id:'legal',name:'Legal Boss',category:'Recht',description:'Führt das Legal-Team: Vertragsmanagement, Compliance, Datenschutz und Rechtsberatung',icon:'⚖️',specialists:2},
-      {id:'finance',name:'Finance Boss',category:'Finanzen',description:'Führt das Finance-Team: Buchhaltung, Financial Planning, Tax Optimization und Investment-Analyse',icon:'💰',specialists:2},
-      {id:'support',name:'Support Boss',category:'Service',description:'Führt das Support-Team: Customer Success, Technical Support, User Experience und Service Excellence',icon:'🛠️',specialists:2}
-    ];
+<script>
+  const bossBots = [
+    {id:'content',name:'Content Boss',category:'Kreativ',description:'Führt das Content-Team: Texte, Artikel, Social Media Posts, Storytelling und kreative Kampagnen',icon:'📝',specialists:3},
+    {id:'business',name:'Business Boss',category:'Analyse',description:'Führt das Analyse-Team: Reports, Strategien, KPIs, Business Intelligence und Marktanalysen',icon:'📊',specialists:2},
+    {id:'marketing',name:'Marketing Boss',category:'Marketing',description:'Führt das Marketing-Team: Kampagnen, SEO, Conversion-Optimierung und Performance Marketing',icon:'📈',specialists:4},
+    {id:'tech',name:'Tech Boss',category:'Technik',description:'Führt das Development-Team: Code, APIs, Solutions, Automatisierung und Tech-Innovation',icon:'💻',specialists:3},
+    {id:'strategy',name:'Strategy Boss',category:'Strategie',description:'Führt das Strategy-Team: Innovation, Growth Hacking, Strategic Planning und Zukunftsplanung',icon:'🎯',specialists:2},
+    {id:'hr',name:'HR Boss',category:'Personal',description:'Führt das People-Team: Recruiting, Leadership Development, Company Culture und Talent Management',icon:'👥',specialists:2},
+    {id:'communication',name:'Communication Boss',category:'Kommunikation',description:'Führt das Communication-Team: E-Mail Marketing, Korrespondenz, PR und externe Kommunikation',icon:'✉️',specialists:2},
+    {id:'branding',name:'Branding Boss',category:'Design',description:'Führt das Design-Team: Logo Design, Corporate Identity, Visual Branding und Creative Direction',icon:'🎨',specialists:3},
+    {id:'sales',name:'Sales Boss',category:'Vertrieb',description:'Führt das Sales-Team: Lead Generation, Sales Funnels, CRM Management und Revenue Optimization',icon:'💼',specialists:3},
+    {id:'legal',name:'Legal Boss',category:'Recht',description:'Führt das Legal-Team: Vertragsmanagement, Compliance, Datenschutz und Rechtsberatung',icon:'⚖️',specialists:2},
+    {id:'finance',name:'Finance Boss',category:'Finanzen',description:'Führt das Finance-Team: Buchhaltung, Financial Planning, Tax Optimization und Investment-Analyse',icon:'💰',specialists:2},
+    {id:'support',name:'Support Boss',category:'Service',description:'Führt das Support-Team: Customer Success, Technical Support, User Experience und Service Excellence',icon:'🛠️',specialists:2}
+  ];
 
-    let selectedBots = [];
-    const maxBots = 9;
-    const totalBots = 12;
+  let selectedBots = [];
+  const maxBots = 9;
 
-    function createParticles(){
-      const particles=document.getElementById('particles');
-      for(let i=0;i<20;i++){
-        const p=document.createElement('div');
-        p.className='particle';
-        p.style.left=Math.random()*100+'%';
-        p.style.top=Math.random()*100+'%';
-        p.style.width=p.style.height=Math.random()*4+2+'px';
-        p.style.animationDelay=Math.random()*6+'s';
-        particles.appendChild(p);
-      }
+  function createParticles(){
+    const particles=document.getElementById('particles');
+    for(let i=0;i<20;i++){
+      const p=document.createElement('div');
+      p.className='particle';
+      p.style.left=Math.random()*100+'%';
+      p.style.top=Math.random()*100+'%';
+      p.style.width=p.style.height=Math.random()*4+2+'px';
+      p.style.animationDelay=Math.random()*6+'s';
+      particles.appendChild(p);
     }
+  }
 
-    function renderBots(){
-      const grid=document.getElementById('botsGrid');
-      grid.innerHTML='';
-      bossBots.forEach(bot=>{
-        const card=document.createElement('div');
-        card.className=`bot-card ${selectedBots.includes(bot.id)?'selected':''}`;
-        card.onclick=()=>toggleBot(bot.id);
-        card.innerHTML=`
-          <div class="bot-header">
-            <div class="bot-icon">${bot.icon}</div>
-            <div class="bot-title">
-              <h3>${bot.name}</h3>
-              <div class="bot-category">${bot.category}</div>
-            </div>
+  function renderBots(){
+    const grid=document.getElementById('botsGrid');
+    grid.innerHTML='';
+    bossBots.forEach(bot=>{
+      const card=document.createElement('div');
+      card.className='bot-card' + (selectedBots.includes(bot.id)?' selected':'');
+      card.onclick=()=>toggleBot(bot.id);
+      card.innerHTML=`
+        <div class="bot-header">
+          <div class="bot-icon">${bot.icon}</div>
+          <div class="bot-title">
+            <h3>${bot.name}</h3>
+            <div class="bot-category">${bot.category}</div>
           </div>
-          <div class="bot-description">${bot.description}</div>
-          <div class="team-info"><i class="fas fa-users"></i>${bot.specialists} Spezialisten</div>
-        `;
-        grid.appendChild(card);
+        </div>
+        <div class="bot-description">${bot.description}</div>
+        <div class="team-info"><i class="fas fa-users"></i>${bot.specialists} Spezialisten</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function toggleBot(id){
+    const i=selectedBots.indexOf(id);
+    if(i>-1){selectedBots.splice(i,1);}
+    else{
+      if(selectedBots.length<maxBots){selectedBots.push(id);}
+      else{showError(`Sie können maximal ${maxBots} Boss Bots auswählen.`);return;}
+    }
+    updateUI();
+  }
+
+  function updateUI(){
+    const emailInput = document.getElementById('userEmail');
+    const hasEmail = emailInput && emailInput.value.trim() !== '';
+    const hasValidEmail = emailInput && emailInput.validity.valid;
+    
+    document.getElementById('selectedCount').textContent=selectedBots.length;
+    document.getElementById('submitBtn').disabled = !(selectedBots.length === maxBots && hasEmail && hasValidEmail);
+    
+    if(selectedBots.length>0) hideError();
+    renderBots();
+    updateFormData();
+  }
+
+  function updateFormData(){
+    const hidden=document.getElementById('hiddenFields');
+    hidden.innerHTML='';
+
+    selectedBots.forEach((botId,index)=>{
+      const bot=bossBots.find(b=>b.id===botId);
+      ['id','name','category','specialists'].forEach(key=>{
+        const input=document.createElement('input');
+        input.type='hidden';
+        input.name=`selected_bot_${index+1}_${key}`;
+        input.value=bot[key];
+        hidden.appendChild(input);
       });
-    }
-
-    function toggleBot(id){
-      const i=selectedBots.indexOf(id);
-      if(i>-1){selectedBots.splice(i,1);}
-      else{
-        if(selectedBots.length<maxBots){selectedBots.push(id);}
-        else{showError(`Sie können maximal ${maxBots} Boss Bots auswählen.`);return;}
-      }
-      updateUI();
-    }
-
-    function updateUI(){
-      const emailInput = document.getElementById('userEmail');
-      const hasEmail = emailInput && emailInput.value.trim() !== '';
-      const hasValidEmail = emailInput && emailInput.validity.valid;
-      
-      document.getElementById('selectedCount').textContent=selectedBots.length;
-      document.getElementById('submitBtn').disabled = !(selectedBots.length === maxBots && hasEmail && hasValidEmail);
-      
-      if(selectedBots.length>0) hideError();
-      renderBots();
-      updateFormData();
-    }
-
-    function updateFormData(){
-      const hidden=document.getElementById('hiddenFields');
-      hidden.innerHTML='';
-
-      selectedBots.forEach((botId,index)=>{
-        const bot=bossBots.find(b=>b.id===botId);
-        ['id','name','category','specialists'].forEach(key=>{
-          const input=document.createElement('input');
-          input.type='hidden';
-          input.name=`selected_bot_${index+1}_${key}`;
-          input.value=bot[key];
-          hidden.appendChild(input);
-        });
-      });
-
-      const summary=document.createElement('input');
-      summary.type='hidden';summary.name='selection_summary';
-      summary.value=selectedBots.map(id=>{
-        const b=bossBots.find(x=>x.id===id);
-        return `${b.name} (${b.category}) - ${b.specialists} Spezialisten`;
-      }).join(' | ');
-      hidden.appendChild(summary);
-
-      const total=document.createElement('input');
-      total.type='hidden';total.name='total_specialists';
-      total.value=selectedBots.reduce((sum,id)=>{
-        const b=bossBots.find(x=>x.id===id);return sum+b.specialists;
-      },0);
-      hidden.appendChild(total);
-
-      // Nicht ausgewählte Bots hinzufügen
-      const notSelected=bossBots.filter(bot=>!selectedBots.includes(bot.id));
-      const notSelectedNames=document.createElement('input');
-      notSelectedNames.type='hidden';
-      notSelectedNames.name='not_selected_bots';
-      notSelectedNames.value=notSelected.map(bot=>`${bot.name} (${bot.category})`).join(' | ');
-      hidden.appendChild(notSelectedNames);
-
-      document.querySelector('input[name="timestamp"]').value=new Date().toISOString();
-    }
-
-    function showError(msg){
-      const e=document.getElementById('errorMessage');
-      e.textContent=msg;e.style.display='block';
-      document.getElementById('successMessage').style.display='none';
-    }
-    function hideError(){document.getElementById('errorMessage').style.display='none';}
-
-    document.getElementById('botForm').addEventListener('submit',function(e){
-      const emailInput = document.getElementById('userEmail');
-      const email = emailInput.value.trim();
-      
-      if(selectedBots.length!==maxBots){
-        e.preventDefault();
-        showError(`Bitte wählen Sie genau ${maxBots} Boss Bots aus.`);
-        return;
-      }
-      
-      if(!email || !emailInput.validity.valid){
-        e.preventDefault();
-        showError('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
-        emailInput.focus();
-        return;
-      }
-      
-      // Loading state
-      const btn=document.getElementById('submitBtn');
-      const txt=document.getElementById('submitText');
-      btn.disabled=true;
-      txt.innerHTML='<i class="fas fa-spinner fa-spin" style="margin-right:10px;"></i>Wird versendet...';
-      updateFormData();
-      // Formular wird normal an Formspree gesendet
     });
 
-    document.addEventListener('DOMContentLoaded',()=>{
-      createParticles();
-      renderBots();
-      document.querySelector('input[name="timestamp"]').value=new Date().toISOString();
-      
-      // Email input event listener
-      const emailInput = document.getElementById('userEmail');
-      emailInput.addEventListener('input', updateUI);
-      emailInput.addEventListener('blur', updateUI);
-      
-      setTimeout(()=>{
-        document.querySelectorAll('.bot-card').forEach((card,i)=>{
-          card.style.opacity='0';card.style.transform='translateY(30px)';card.style.transition='all .6s ease';
-          setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)';},i*100);
-        });
-      },100);
-    });
-  </script>
+    const summary=document.createElement('input');
+    summary.type='hidden';
+    summary.name='selection_summary';
+    summary.value=selectedBots.map(id=>{
+      const b=bossBots.find(x=>x.id===id);
+      return `${b.name} (${b.category}) - ${b.specialists} Spezialisten`;
+    }).join(' | ');
+    hidden.appendChild(summary);
+
+    const total=document.createElement('input');
+    total.type='hidden';
+    total.name='total_specialists';
+    total.value=selectedBots.reduce((sum,id)=>{
+      const b=bossBots.find(x=>x.id===id);return sum+b.specialists;
+    },0);
+    hidden.appendChild(total);
+
+    const notSelected=bossBots.filter(bot=>!selectedBots.includes(bot.id));
+    const notSelectedNames=document.createElement('input');
+    notSelectedNames.type='hidden';
+    notSelectedNames.name='not_selected_bots';
+    notSelectedNames.value=notSelected.map(bot=>`${bot.name} (${bot.category})`).join(' | ');
+    hidden.appendChild(notSelectedNames);
+
+    document.querySelector('input[name="timestamp"]').value=new Date().toISOString();
+  }
+
+  function showError(msg){
+    const e=document.getElementById('errorMessage');
+    e.textContent=msg;e.style.display='block';
+    document.getElementById('successMessage').style.display='none';
+  }
+
+  function hideError(){
+    document.getElementById('errorMessage').style.display='none';
+  }
+
+  document.getElementById('botForm').addEventListener('submit',function(e){
+    const emailInput = document.getElementById('userEmail');
+    const email = emailInput.value.trim();
+
+    if(selectedBots.length!==maxBots){
+      e.preventDefault();
+      showError(`Bitte wählen Sie genau ${maxBots} Boss Bots aus.`);
+      return;
+    }
+
+    if(!email || !emailInput.validity.valid){
+      e.preventDefault();
+      showError('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+      emailInput.focus();
+      return;
+    }
+
+    // Alles korrekt: Formulardaten vorbereiten und Button deaktivieren (ohne preventDefault)
+    updateFormData();
+
+    const btn=document.getElementById('submitBtn');
+    const txt=document.getElementById('submitText');
+    btn.disabled=true;
+    txt.innerHTML='<i class="fas fa-spinner fa-spin" style="margin-right:10px;"></i>Wird versendet...';
+    // Formular wird jetzt ganz normal an Formspree gesendet + Weiterleitung funktioniert
+  });
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    createParticles();
+    renderBots();
+    document.querySelector('input[name="timestamp"]').value=new Date().toISOString();
+    
+    const emailInput = document.getElementById('userEmail');
+    emailInput.addEventListener('input', updateUI);
+    emailInput.addEventListener('blur', updateUI);
+    
+    setTimeout(()=>{
+      document.querySelectorAll('.bot-card').forEach((card,i)=>{
+        card.style.opacity='0';card.style.transform='translateY(30px)';card.style.transition='all .6s ease';
+        setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)';},i*100);
+      });
+    },100);
+  });
+</script>
 </body>
 </html>
