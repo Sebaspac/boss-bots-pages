@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Danke, dass du bei New Edge dabei bist!</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;overflow-x:hidden}
+    .gradient-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0a0a0a 0%,#1a0033 25%,#003366 50%,#0a0a0a 75%);background-size:400% 400%;animation:gradientShift 15s ease infinite;z-index:-2}
+    @keyframes gradientShift{0%,100%{background-position:0% 50%}25%{background-position:100% 50%}50%{background-position:50% 100%}75%{background-position:50% 0%}}
+    .particles{position:fixed;width:100%;height:100%;z-index:-1}
+    .particle{position:absolute;background:rgba(0,255,157,.1);border-radius:50%;animation:float 6s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0);opacity:.1}50%{transform:translateY(-20px) rotate(180deg);opacity:.3}}
+    .container{max-width:1000px;margin:0 auto;padding:0 20px;position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .success-content{text-align:center;padding:60px 40px;background:rgba(255,255,255,.03);border:1px solid rgba(0,255,157,.2);border-radius:30px;backdrop-filter:blur(20px);position:relative;overflow:hidden}
+    .success-content::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(0,255,157,.05),rgba(0,212,255,.05));z-index:-1}
+    .logo{font-size:2.5em;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:20px}
+    .success-icon{font-size:5em;color:#00ff9d;margin-bottom:30px;animation:successPulse 2s ease-in-out infinite}
+    @keyframes successPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1);filter:drop-shadow(0 0 30px rgba(0,255,157,.7))}}
+    .main-title{font-size:3.5em;font-weight:800;margin-bottom:20px;background:linear-gradient(135deg,#fff,#ccc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+    .subtitle{font-size:1.5em;color:#00ff9d;margin-bottom:40px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+    .body-text{font-size:1.3em;color:#bbb;max-width:700px;margin:0 auto 50px;line-height:1.7}
+    .contact-info{background:rgba(0,255,157,.05);border:1px solid rgba(0,255,157,.2);border-radius:20px;padding:30px;margin-bottom:40px;backdrop-filter:blur(10px)}
+    .contact-text{color:#999;font-size:1.1em;margin-bottom:15px}
+    .tagline{font-size:1.8em;font-weight:700;background:linear-gradient(135deg,#00ff9d,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-top:40px}
+    .processing-badge{display:inline-block;background:linear-gradient(135deg,#00ff9d,#00d4ff);color:#000;padding:15px 40px;border-radius:50px;font-weight:700;font-size:1.2em;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,255,157,.3);position:relative;overflow:hidden}
+    .processing-badge::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2s ease-in-out infinite}
+    @keyframes shimmer{0%{left:-100%}100%{left:100%}}
+    .countdown{font-size:1.1em;color:#00d4ff;font-weight:600;margin-top:20px}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:40px 0;max-width:600px;margin-left:auto;margin-right:auto}
+    .feature-item{background:rgba(255,255,255,.03);border:1px solid rgba(0,255,157,.2);border-radius:15px;padding:20px;text-align:center;backdrop-filter:blur(10px);transition:all .3s ease}
+    .feature-item:hover{transform:translateY(-5px);border-color:#00ff9d}
+    .feature-icon{font-size:2em;color:#00d4ff;margin-bottom:10px}
+    .feature-text{color:#ccc;font-size:.95em}
+    @media (max-width:768px){
+      .main-title{font-size:2.5em}
+      .subtitle{font-size:1.2em}
+      .body-text{font-size:1.1em}
+      .success-content{padding:40px 25px}
+      .features-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="gradient-bg"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="container">
+    <div class="success-content">
+      <div class="logo">NEW EDGE</div>
+      
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      
+      <div class="processing-badge">
+        <i class="fas fa-cogs" style="margin-right:10px;"></i>
+        Deine Boss Bots werden aktiviert
+      </div>
+      
+      <h1 class="main-title">Danke, dass du bei New Edge dabei bist!</h1>
+      
+      <p class="subtitle">Deine Anfrage ist eingegangen - wir legen direkt los</p>
+      
+      <div class="body-text">
+        Wir kümmern uns jetzt darum, dir innerhalb von <strong style="color:#00ff9d;">maximal 48 Stunden</strong> Zugang zu all deinen Bots zu geben. Bleib gespannt - deine digitale Power wartet schon!
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-robot"></i></div>
+          <div class="feature-text">9 Boss Bots<br>werden konfiguriert</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-users"></i></div>
+          <div class="feature-text">Spezialistenteams<br>stehen bereit</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <div class="feature-text">24/7 Power<br>für dein Business</div>
+        </div>
+      </div>
+      
+      <div class="contact-info">
+        <div class="contact-text">
+          Falls du Fragen hast, erreichst du uns jederzeit:
+        </div>
+        <div style="color:#00ff9d;font-weight:600;font-size:1.1em;">
+          <i class="fas fa-envelope" style="margin-right:8px;"></i>
+          agenthub@newedgebrand.com
+        </div>
+      </div>
+      
+      <div class="countdown" id="countdown">
+        ⏱️ Aktivierung beginnt in wenigen Minuten...
+      </div>
+      
+      <div class="tagline">
+        Willkommen bei New Edge - Let's Design the Edge
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function createParticles(){
+      const particles=document.getElementById('particles');
+      for(let i=0;i<25;i++){
+        const p=document.createElement('div');
+        p.className='particle';
+        p.style.left=Math.random()*100+'%';
+        p.style.top=Math.random()*100+'%';
+        p.style.width=p.style.height=Math.random()*4+2+'px';
+        p.style.animationDelay=Math.random()*6+'s';
+        particles.appendChild(p);
+      }
+    }
+
+    function startCountdown(){
+      const messages = [
+        "⏱️ Aktivierung beginnt in wenigen Minuten...",
+        "🔄 Boss Bots werden geladen...",
+        "⚡ Systeme initialisieren...",
+        "🚀 Teams werden zusammengestellt...",
+        "✨ Fast geschafft - Power wird aktiviert...",
+        "🎯 Bereit für maximale Performance!"
+      ];
+      
+      let index = 0;
+      const countdownEl = document.getElementById('countdown');
+      
+      setInterval(() => {
+        countdownEl.textContent = messages[index];
+        index = (index + 1) % messages.length;
+      }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      createParticles();
+      startCountdown();
+      
+      // Animate content on load
+      const content = document.querySelector('.success-content');
+      content.style.opacity = '0';
+      content.style.transform = 'translateY(50px)';
+      content.style.transition = 'all 1s ease';
+      
+      setTimeout(() => {
+        content.style.opacity = '1';
+        content.style.transform = 'translateY(0)';
+      }, 200);
+    });
+  </script>
+</body>
+</html>
