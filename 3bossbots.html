@@ -37,6 +37,7 @@
     .bot-description{color:#bbb;line-height:1.6;margin-bottom:20px;position:relative;z-index:1}
     .team-info{display:flex;align-items:center;color:#888;font-size:.95em;position:relative;z-index:1}
     .team-info i{margin-right:8px;color:#00d4ff}
+    .bot-specialists{font-size:.9em;color:#999;margin-top:10px;font-style:italic}
     .submit-section{text-align:center;padding:50px 30px;background:rgba(255,255,255,.03);border-radius:25px;backdrop-filter:blur(20px);border:1px solid rgba(0,255,157,.2)}
     .submit-btn{background:linear-gradient(135deg,#00ff9d,#00d4ff);color:#000;border:none;padding:18px 50px;border-radius:50px;font-size:1.3em;font-weight:700;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 40px rgba(0,255,157,.4);position:relative;overflow:hidden}
     .submit-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transition:left .5s}
@@ -46,7 +47,6 @@
     .error-message{color:#ff4757;margin-top:20px;font-weight:600;padding:15px;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);border-radius:10px}
     .success-message{color:#00ff9d;margin-top:20px;font-weight:600;padding:15px;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.3);border-radius:10px;display:none}
     .hidden-fields{display:none}
-    /* E-Mail Input Styling aus zweitem Code */
     .email-input-section input:focus{
       outline:none;
       border-color:#00ff9d;
@@ -80,7 +80,7 @@
   <input type="hidden" name="_captcha" value="false">
   <input type="hidden" name="_template" value="table">
   <input type="hidden" name="_subject" value="Neue Boss Bot Auswahl - 3er Paket">
-  <input type="hidden" name="package_type" value="4 Boss Bot Premium-Paket">
+  <input type="hidden" name="package_type" value="3 Boss Bot Premium-Paket">
   <input type="hidden" name="timestamp" value="">
 
       <div class="selection-info">
@@ -118,18 +118,78 @@
 
 <script>
   const bossBots = [
-    {id:'content',name:'Content Boss',category:'Kreativ',description:'Führt das Content-Team: Texte, Artikel, Social Media Posts, Storytelling und kreative Kampagnen',icon:'📝',specialists:3},
-    {id:'business',name:'Business Boss',category:'Analyse',description:'Führt das Analyse-Team: Reports, Strategien, KPIs, Business Intelligence und Marktanalysen',icon:'📊',specialists:2},
-    {id:'marketing',name:'Marketing Boss',category:'Marketing',description:'Führt das Marketing-Team: Kampagnen, SEO, Conversion-Optimierung und Performance Marketing',icon:'📈',specialists:4},
-    {id:'tech',name:'Tech Boss',category:'Technik',description:'Führt das Development-Team: Code, APIs, Solutions, Automatisierung und Tech-Innovation',icon:'💻',specialists:3},
-    {id:'strategy',name:'Strategy Boss',category:'Strategie',description:'Führt das Strategy-Team: Innovation, Growth Hacking, Strategic Planning und Zukunftsplanung',icon:'🎯',specialists:2},
-    {id:'hr',name:'HR Boss',category:'Personal',description:'Führt das People-Team: Recruiting, Leadership Development, Company Culture und Talent Management',icon:'👥',specialists:2},
-    {id:'communication',name:'Communication Boss',category:'Kommunikation',description:'Führt das Communication-Team: E-Mail Marketing, Korrespondenz, PR und externe Kommunikation',icon:'✉️',specialists:2},
-    {id:'branding',name:'Branding Boss',category:'Design',description:'Führt das Design-Team: Logo Design, Corporate Identity, Visual Branding und Creative Direction',icon:'🎨',specialists:3},
-    {id:'sales',name:'Sales Boss',category:'Vertrieb',description:'Führt das Sales-Team: Lead Generation, Sales Funnels, CRM Management und Revenue Optimization',icon:'💼',specialists:3},
-    {id:'legal',name:'Legal Boss',category:'Recht',description:'Führt das Legal-Team: Vertragsmanagement, Compliance, Datenschutz und Rechtsberatung',icon:'⚖️',specialists:2},
-    {id:'finance',name:'Finance Boss',category:'Finanzen',description:'Führt das Finance-Team: Buchhaltung, Financial Planning, Tax Optimization und Investment-Analyse',icon:'💰',specialists:2},
-    {id:'support',name:'Support Boss',category:'Service',description:'Führt das Support-Team: Customer Success, Technical Support, User Experience und Service Excellence',icon:'🛠️',specialists:2}
+    {
+      id: 'content',
+      name: 'Content Boss',
+      category: 'Inhalte & Kreativität',
+      description: 'Führt das Content-Team für alle kreativen Inhalte und Texte',
+      icon: '📝',
+      specialists: 2,
+      team: '📝 SoMe Texter + ✍️ Copywriter'
+    },
+    {
+      id: 'marketing',
+      name: 'Marketing Boss',
+      category: 'Reichweite & Kampagnen',
+      description: 'Führt das Marketing-Team für Kampagnen, SEO und Social Media',
+      icon: '📈',
+      specialists: 3,
+      team: '📅 SoMe Planner + 🚀 Kampagnen Boss + 🔍 SEO/SEA Boss'
+    },
+    {
+      id: 'branding',
+      name: 'Branding Boss',
+      category: 'Visuelle Identität',
+      description: 'Führt das Design-Team für Logo und Visual Identity',
+      icon: '🎨',
+      specialists: 2,
+      team: '🎨 Logo Boss + 🧠 Visual Identity Boss'
+    },
+    {
+      id: 'communication',
+      name: 'Communication Boss',
+      category: 'Externe & Interne Kommunikation',
+      description: 'Führt das Communication-Team für E-Mail und interne Kommunikation',
+      icon: '💬',
+      specialists: 2,
+      team: '📧 Email Bot + 🗣️ Interne Kommunikation'
+    },
+    {
+      id: 'strategy',
+      name: 'Strategy Boss',
+      category: 'Planung & Innovation',
+      description: 'Führt das Strategy-Team für Growth und strategische Planung',
+      icon: '🎯',
+      specialists: 2,
+      team: '📊 Growth Bot + 🧭 Planung Bot'
+    },
+    {
+      id: 'hr',
+      name: 'HR Boss',
+      category: 'Teamaufbau & Abläufe',
+      description: 'Führt das People-Team für Recruiting und Onboarding',
+      icon: '👥',
+      specialists: 2,
+      team: '👤 Recruiting Bot + 🧭 Onboarding Bot'
+    },
+    {
+      id: 'nerdy',
+      name: 'Nerdy Boss',
+      category: 'Analyse & Daten',
+      description: 'Erstellt Auswertungen und Dashboards für datenbasierte Entscheidungen',
+      icon: '🤓',
+      specialists: 1,
+      team: '📈 KPIs Bot - erstellt Auswertungen & Dashboards'
+    },
+    {
+      id: 'allrounder',
+      name: 'Allrounder Boss',
+      category: 'Firmenwissen & Meta',
+      description: 'Kennt alle Teams und Kontexte - der Meta-Boss für übergreifende Aufgaben',
+      icon: '🧠',
+      specialists: 1,
+      team: '🧠 Company Brain - kennt alle Teams & Kontexte'
+    }
   ];
 
   let selectedBots = [];
@@ -164,7 +224,10 @@
           </div>
         </div>
         <div class="bot-description">${bot.description}</div>
-        <div class="team-info"><i class="fas fa-users"></i>${bot.specialists} Spezialisten</div>
+        <div class="team-info">
+          <i class="fas fa-users"></i>${bot.specialists} Experten-Bot${bot.specialists > 1 ? 's' : ''}
+        </div>
+        <div class="bot-specialists">${bot.team}</div>
       `;
       grid.appendChild(card);
     });
@@ -199,7 +262,7 @@
 
     selectedBots.forEach((botId,index)=>{
       const bot=bossBots.find(b=>b.id===botId);
-      ['id','name','category','specialists'].forEach(key=>{
+      ['id','name','category','specialists','team'].forEach(key=>{
         const input=document.createElement('input');
         input.type='hidden';
         input.name=`selected_bot_${index+1}_${key}`;
@@ -213,7 +276,7 @@
     summary.name='selection_summary';
     summary.value=selectedBots.map(id=>{
       const b=bossBots.find(x=>x.id===id);
-      return `${b.name} (${b.category}) - ${b.specialists} Spezialisten`;
+      return `${b.name} (${b.category}) - ${b.specialists} Experten-Bot${b.specialists > 1 ? 's' : ''}`;
     }).join(' | ');
     hidden.appendChild(summary);
 
@@ -262,14 +325,12 @@
       return;
     }
 
-    // Alles korrekt: Formulardaten vorbereiten und Button deaktivieren (ohne preventDefault)
     updateFormData();
 
     const btn=document.getElementById('submitBtn');
     const txt=document.getElementById('submitText');
     btn.disabled=true;
     txt.innerHTML='<i class="fas fa-spinner fa-spin" style="margin-right:10px;"></i>Wird versendet...';
-    // Formular wird jetzt ganz normal an Formspree gesendet + Weiterleitung funktioniert
   });
 
   document.addEventListener('DOMContentLoaded',()=>{
@@ -291,4 +352,3 @@
 </script>
 </body>
 </html>
-
