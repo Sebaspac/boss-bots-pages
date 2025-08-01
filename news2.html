@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kontaktformular – NewEdge</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .form-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      background: #f9f9f9;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+    }
+    .success {
+      background-color: #28a745;
+      color: white;
+    }
+    .error {
+      background-color: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>📩 Kontakt</h1>
+    <form id="contactForm">
+      <label for="name">Name *</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">E-Mail *</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="telefon">Telefon</label>
+      <input type="tel" id="telefon" name="telefon" />
+
+      <label for="nachricht">Nachricht</label>
+      <textarea id="nachricht" name="nachricht"></textarea>
+
+      <button type="submit">Nachricht senden</button>
+
+      <div class="message success" id="successMsg">✅ Nachricht gesendet!</div>
+      <div class="message error" id="errorMsg">❌ Fehler beim Senden. Bitte erneut versuchen.</div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const successMsg = document.getElementById("successMsg");
+    const errorMsg = document.getElementById("errorMsg");
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      successMsg.style.display = "none";
+      errorMsg.style.display = "none";
+
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        telefon: form.telefon.value,
+        nachricht: form.nachricht.value
+      };
+
+      try {
+        const res = await fetch("https://n8n-pro-oh9w.onrender.com/webhook-test/kontakt", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) throw new Error("Server error");
+
+        form.reset();
+        successMsg.style.display = "block";
+      } catch (err) {
+        console.error(err);
+        errorMsg.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
