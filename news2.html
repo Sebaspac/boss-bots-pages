@@ -41,6 +41,12 @@
       border-radius: 10px;
       font-size: 16px;
       background: #f9f9f9;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus {
+      border-color: #667eea;
+      outline: none;
+      background: white;
     }
     textarea {
       resize: vertical;
@@ -57,9 +63,14 @@
       border-radius: 10px;
       cursor: pointer;
       font-weight: bold;
+      transition: opacity 0.3s ease;
     }
     button:hover {
       opacity: 0.9;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
     .message {
       margin-top: 20px;
@@ -77,49 +88,84 @@
       background-color: #dc3545;
       color: white;
     }
+    .required {
+      color: #dc3545;
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    .form-row > div {
+      flex: 1;
+    }
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="form-container">
     <h1>📩 Kontakt</h1>
     <form id="contactForm">
-      <label for="name">Name *</label>
+      <label for="name">Name <span class="required">*</span></label>
       <input type="text" id="name" name="name" required />
-
-      <label for="email">E-Mail *</label>
+      
+      <label for="email">E-Mail <span class="required">*</span></label>
       <input type="email" id="email" name="email" required />
-
+      
+      <div class="form-row">
+        <div>
+          <label for="position">Position <span class="required">*</span></label>
+          <input type="text" id="position" name="position" required placeholder="z.B. Geschäftsführer" />
+        </div>
+        <div>
+          <label for="firma">Firma <span class="required">*</span></label>
+          <input type="text" id="firma" name="firma" required placeholder="z.B. Mustermann GmbH" />
+        </div>
+      </div>
+      
       <label for="telefon">Telefon</label>
-      <input type="tel" id="telefon" name="telefon" />
-
+      <input type="tel" id="telefon" name="telefon" placeholder="+49 123 456789" />
+      
       <label for="nachricht">Nachricht</label>
-      <textarea id="nachricht" name="nachricht"></textarea>
-
-      <button type="submit">Nachricht senden</button>
-
-      <div class="message success" id="successMsg">✅ Nachricht gesendet!</div>
-      <div class="message error" id="errorMsg">❌ Fehler beim Senden. Bitte erneut versuchen.</div>
+      <textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie Ihr Anliegen..."></textarea>
+      
+      <button type="submit" id="submitBtn">Nachricht senden</button>
+      
+      <div class="message success" id="successMsg">✅ Nachricht erfolgreich gesendet!</div>
+      <div class="message error" id="errorMsg">❌ Fehler beim Senden. Bitte versuchen Sie es erneut.</div>
     </form>
   </div>
-
+  
   <script>
     const form = document.getElementById("contactForm");
     const successMsg = document.getElementById("successMsg");
     const errorMsg = document.getElementById("errorMsg");
-
+    const submitBtn = document.getElementById("submitBtn");
+    
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
-
+      
+      // Nachrichten verstecken
       successMsg.style.display = "none";
       errorMsg.style.display = "none";
-
+      
+      // Button deaktivieren während des Sendens
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wird gesendet...";
+      
       const data = {
-        name: form.name.value,
-        email: form.email.value,
-        telefon: form.telefon.value,
-        nachricht: form.nachricht.value
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        position: form.position.value.trim(),
+        firma: form.firma.value.trim(),
+        telefon: form.telefon.value.trim(),
+        nachricht: form.nachricht.value.trim()
       };
-
+      
       try {
         const res = await fetch("https://n8n-pro-oh9w.onrender.com/webhook-test/kontakt", {
           method: "POST",
@@ -128,15 +174,53 @@
           },
           body: JSON.stringify(data)
         });
-
-        if (!res.ok) throw new Error("Server error");
-
+        
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+        
+        // Erfolg
         form.reset();
         successMsg.style.display = "block";
+        
+        // Nach 5 Sekunden Erfolgsnachricht ausblenden
+        setTimeout(() => {
+          successMsg.style.display = "none";
+        }, 5000);
+        
       } catch (err) {
-        console.error(err);
+        console.error("Fehler beim Senden:", err);
         errorMsg.style.display = "block";
+        
+        // Nach 5 Sekunden Fehlernachricht ausblenden
+        setTimeout(() => {
+          errorMsg.style.display = "none";
+        }, 5000);
+      } finally {
+        // Button wieder aktivieren
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Nachricht senden";
       }
+    });
+    
+    // Einfache Formularvalidierung mit visueller Rückmeldung
+    const requiredFields = ['name', 'email', 'position', 'firma'];
+    
+    requiredFields.forEach(fieldName => {
+      const field = document.getElementById(fieldName);
+      field.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+          this.style.borderColor = '#dc3545';
+        } else {
+          this.style.borderColor = '#28a745';
+        }
+      });
+      
+      field.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+          this.style.borderColor = '#28a745';
+        }
+      });
     });
   </script>
 </body>
